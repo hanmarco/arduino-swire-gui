@@ -202,7 +202,6 @@ onUnmounted(() => {
     </div>
 
     <div class="messages" ref="messagesContainer">
-      <h2>Messages:</h2>
       <div v-for="(msg, index) in receivedMessages" :key="index" class="message-item">
         {{ msg }}
       </div>
@@ -293,7 +292,7 @@ onUnmounted(() => {
   margin-top: 20px;
   border: 1px solid #eee;
   padding: 10px;
-  max-height: 200px;
+  height: 200px;
   overflow-y: auto;
   background-color: #f9f9f9;
   border-radius: 4px;
