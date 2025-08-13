@@ -8,6 +8,8 @@ const selectedPort = ref("");
 const isConnected = ref(false);
 const dutyValue = ref(1);
 const pulseValue = ref(5);
+const frequencyValue = ref("100");
+const frequencies = ref(["100", "200", "400"]);
 const receivedMessages = ref([]);
 let serialPortInstance = null;
 let unlisten = null;
@@ -96,6 +98,11 @@ function sendS10() {
   sendMessage(`s10 ${pulseValue.value}`);
 }
 
+function setFrequency() {
+  const freq = frequencyValue.value;
+  sendMessage(`f${freq}`);
+}
+
 onMounted(() => {
   listPorts();
   // 초기 진입 시에도 스크롤을 최하단으로 이동
@@ -136,6 +143,14 @@ onUnmounted(() => {
     <div class="row">
       <label for="pulse-input">Pulse:</label>
       <input id="pulse-input" type="number" v-model.number="pulseValue" />
+    </div>
+
+    <div class="row">
+      <label for="frequency-select">Frequency (KHz):</label>
+      <select id="frequency-select" v-model="frequencyValue">
+        <option v-for="freq in frequencies" :key="freq" :value="freq">{{ freq }}</option>
+      </select>
+      <button @click="setFrequency">Set Frequency</button>
     </div>
 
     <div class="row">
