@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { SerialPort } from "tauri-plugin-serialplugin";
 
 const ports = ref([]);
+const portDetails = ref([]);
 const selectedPort = ref("");
 const isConnected = ref(false);
 const dutyValue = ref(1);
@@ -30,9 +31,24 @@ watch(
 async function listPorts() {
   try {
     const availablePorts = await SerialPort.available_ports();
-    ports.value = availablePorts.map((p) => p.port_name);
+    console.log('Available ports:', availablePorts); // 데이터 구조 확인
+    
+    // 포트 데이터가 배열이 아닌 경우를 처리
+    const portsArray = Array.isArray(availablePorts) ? availablePorts : [availablePorts];
+    // 각 포트의 전체 정보 저장
+    const portDetails = portsArray.map(p => ({
+      name: p.port_name || p.portName || p,
+      product: p.product || ''
+    }));
+    // 포트 이름만 따로 저장
+    ports.value = portDetails.map(p => p.name);
+    // 포트 목록 디버깅
+    console.log('Port details:', portDetails);
+    
     if (ports.value.length > 0) {
       selectedPort.value = ports.value[0];
+    } else {
+      receivedMessages.value.push('No available ports found');
     }
   } catch (error) {
     console.error("Error listing ports:", error);
@@ -140,7 +156,9 @@ onUnmounted(() => {
     <div class="row">
       <label for="com-port-select">COM Port:</label>
       <select id="com-port-select" v-model="selectedPort">
-        <option v-for="port in ports" :key="port" :value="port">{{ port }}</option>
+        <option v-for="port in portDetails" :key="port.name" :value="port.name">
+          {{ port.product ? `${port.name} (${port.product})` : port.name }}
+        </option>
       </select>
       <button class="icon-button" @click="listPorts" :disabled="isConnected" title="Refresh port list">
         🔄
