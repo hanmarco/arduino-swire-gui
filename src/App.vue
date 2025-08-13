@@ -152,7 +152,15 @@ onUnmounted(() => {
 
 <template>
   <main class="container">
-    <h1>Arduino Swire GUI <span class="version">v{{ pkg.version }}</span></h1>
+    <h1 class="title-row">
+      <a href="https://github.sec.samsung.net/sss-han/arduino-swire-gui" target="_blank" class="github-link" title="View source on GitHub">
+        <svg height="24" width="24" viewBox="0 0 16 16" class="github-icon">
+          <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+      </a>
+      Arduino Swire GUI 
+      <span class="version">v{{ pkg.version }}</span>
+    </h1>
 
     <div class="row">
       <label for="com-port-select">COM Port:</label>
@@ -199,6 +207,16 @@ onUnmounted(() => {
         {{ msg }}
       </div>
     </div>
+
+    <footer class="footer">
+      <div class="author">
+        <span class="powered-by">POWERED BY</span>
+        <svg class="user-icon" width="20" height="20" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+        </svg>
+        <a href="knoxim://sss.han" class="author-name author-link" target="_blank">sss.han</a>
+      </div>
+    </footer>
   </main>
 </template>
 
@@ -296,9 +314,83 @@ h1, h2 {
   color: #333;
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
 .version {
   font-size: 0.6em;
   color: #666;
   font-weight: normal;
+  margin-right: 4px;
+}
+
+.footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #666;
+}
+
+.github-link {
+  color: #666;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.github-link:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.github-icon {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.user-icon {
+  opacity: 0.8;
+}
+
+.powered-by {
+  font-size: 0.7em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #999;
+  font-weight: 500;
+}
+
+.author-name {
+  font-weight: 500;
+  color: #666;
+}
+
+.author-link {
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.author-link:hover {
+  color: #333;
+  text-decoration: underline;
 }
 </style>
