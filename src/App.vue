@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 // src/App.vue 또는 사용하는 파일
 import { SerialPort } from "tauri-plugin-serialplugin";
 
@@ -98,6 +98,12 @@ function sendS10() {
 
 onMounted(() => {
   listPorts();
+  // 초기 진입 시에도 스크롤을 최하단으로 이동
+  nextTick(() => {
+    const el = messagesContainer.value;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  });
 });
 
 onUnmounted(() => {
@@ -137,7 +143,7 @@ onUnmounted(() => {
       <button class="half-width" @click="sendS10">s10</button>
     </div>
 
-    <div class="messages">
+    <div class="messages" ref="messagesContainer">
       <h2>Messages:</h2>
       <div v-for="(msg, index) in receivedMessages" :key="index" class="message-item">
         {{ msg }}
