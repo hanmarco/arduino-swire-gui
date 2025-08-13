@@ -17,6 +17,10 @@ let serialPortInstance = null;
 let unlisten = null;
 const messagesContainer = ref(null);
 
+function clearMessages() {
+  receivedMessages.value = [];
+}
+
 // 메시지가 추가될 때마다 스크롤을 최하단으로 이동
 watch(
   () => receivedMessages.value.length,
@@ -201,9 +205,17 @@ onUnmounted(() => {
       <button class="half-width" @click="sendS10" :disabled="!isConnected">s10</button>
     </div>
 
-    <div class="messages" ref="messagesContainer">
-      <div v-for="(msg, index) in receivedMessages" :key="index" class="message-item">
-        {{ msg }}
+    <div class="messages">
+      <div class="messages-header">
+        <h4>Messages:</h4>
+        <button class="clear-button" @click="clearMessages" :disabled="receivedMessages.length === 0">
+          Clear
+        </button>
+      </div>
+      <div class="messages-content" ref="messagesContainer">
+        <div v-for="(msg, index) in receivedMessages" :key="index" class="message-item">
+          {{ msg }}
+        </div>
       </div>
     </div>
 
@@ -293,9 +305,50 @@ onUnmounted(() => {
   border: 1px solid #eee;
   padding: 10px;
   height: 200px;
-  overflow-y: auto;
   background-color: #f9f9f9;
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  margin-top: 10px;
+}
+
+.messages-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+  height: 20px;
+}
+
+.messages-header h2 {
+  margin: 0;
+}
+
+.clear-button {
+  padding: 4px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.clear-button:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.clear-button:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .message-item {
