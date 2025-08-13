@@ -142,6 +142,9 @@ onUnmounted(() => {
       <select id="com-port-select" v-model="selectedPort">
         <option v-for="port in ports" :key="port" :value="port">{{ port }}</option>
       </select>
+      <button class="icon-button" @click="listPorts" :disabled="isConnected" title="Refresh port list">
+        🔄
+      </button>
       <button @click="toggleConnection">
         {{ isConnected ? "Disconnect" : "Connect" }}
       </button>
@@ -226,6 +229,12 @@ onUnmounted(() => {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.icon-button {
+  padding: 8px 10px !important;
+  min-width: 36px;
+  font-size: 16px;
 }
 
 .row input:disabled,
