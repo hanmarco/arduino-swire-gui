@@ -13,6 +13,19 @@ const frequencies = ref(["100", "200", "400"]);
 const receivedMessages = ref([]);
 let serialPortInstance = null;
 let unlisten = null;
+const messagesContainer = ref(null);
+
+// 메시지가 추가될 때마다 스크롤을 최하단으로 이동
+watch(
+  () => receivedMessages.value.length,
+  async () => {
+    await nextTick() // v-for 렌더 완료 대기
+    const el = messagesContainer.value
+    if (!el) return
+    el.scrollTop = el.scrollHeight // 최하단으로 이동
+  },
+  { flush: 'post' } // DOM 업데이트 이후 콜백 실행
+);
 
 async function listPorts() {
   try {
