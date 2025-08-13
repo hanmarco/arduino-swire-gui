@@ -225,7 +225,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
+  padding: 10px;
   max-width: 600px;
   margin: auto;
 }
@@ -319,6 +319,7 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   gap: 12px;
+  margin-top: 0px
 }
 
 .version {
@@ -334,7 +335,7 @@ h1, h2 {
   border-top: 1px solid #eee;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
   color: #666;
 }
 
@@ -363,6 +364,7 @@ h1, h2 {
 .author {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 0.9em;
 }
