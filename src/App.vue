@@ -7,7 +7,7 @@ const ports = ref([]);
 const selectedPort = ref("");
 const isConnected = ref(false);
 const dutyValue = ref(1);
-const pulseValue = ref(0);
+const pulseValue = ref(5);
 const receivedMessages = ref([]);
 let serialPortInstance = null;
 let unlisten = null;
@@ -133,8 +133,8 @@ onUnmounted(() => {
     </div>
 
     <div class="row">
-      <button @click="sendS9">s9</button>
-      <button @click="sendS10">s10</button>
+      <button class="half-width" @click="sendS9">s9</button>
+      <button class="half-width" @click="sendS10">s10</button>
     </div>
 
     <div class="messages">
@@ -186,6 +186,12 @@ onUnmounted(() => {
 
 .row button:hover {
   background-color: #0056b3;
+}
+
+.half-width {
+  flex: 1 1 50%;
+  width: 50%;
+  margin: 0;
 }
 
 .messages {
