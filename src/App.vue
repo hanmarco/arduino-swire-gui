@@ -136,26 +136,26 @@ onUnmounted(() => {
 
     <div class="row">
       <label for="duty-input">Duty (1-10):</label>
-      <input id="duty-input" type="number" v-model.number="dutyValue" min="1" max="10" />
-      <button @click="setDuty">Set Duty</button>
+      <input id="duty-input" type="number" v-model.number="dutyValue" min="1" max="10" :disabled="!isConnected" />
+      <button @click="setDuty" :disabled="!isConnected">Set Duty</button>
     </div>
 
     <div class="row">
       <label for="pulse-input">Pulse:</label>
-      <input id="pulse-input" type="number" v-model.number="pulseValue" />
+      <input id="pulse-input" type="number" v-model.number="pulseValue" :disabled="!isConnected" />
     </div>
 
     <div class="row">
       <label for="frequency-select">Frequency (KHz):</label>
-      <select id="frequency-select" v-model="frequencyValue">
+      <select id="frequency-select" v-model="frequencyValue" :disabled="!isConnected">
         <option v-for="freq in frequencies" :key="freq" :value="freq">{{ freq }}</option>
       </select>
-      <button @click="setFrequency">Set Frequency</button>
+      <button @click="setFrequency" :disabled="!isConnected">Set Frequency</button>
     </div>
 
     <div class="row">
-      <button class="half-width" @click="sendS9">s9</button>
-      <button class="half-width" @click="sendS10">s10</button>
+      <button class="half-width" @click="sendS9" :disabled="!isConnected">s9</button>
+      <button class="half-width" @click="sendS10" :disabled="!isConnected">s10</button>
     </div>
 
     <div class="messages" ref="messagesContainer">
@@ -205,8 +205,21 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
-.row button:hover {
+.row button:hover:not(:disabled) {
   background-color: #0056b3;
+}
+
+.row button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.row input:disabled,
+.row select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .half-width {
