@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 // src/App.vue 또는 사용하는 파일
 import { SerialPort } from "tauri-plugin-serialplugin";
+import pkg from '../package.json';
 
 const ports = ref([]);
 const portDetails = ref([]);
@@ -151,7 +152,7 @@ onUnmounted(() => {
 
 <template>
   <main class="container">
-    <h1>Arduino Swire GUI</h1>
+    <h1>Arduino Swire GUI <span class="version">v{{ pkg.version }}</span></h1>
 
     <div class="row">
       <label for="com-port-select">COM Port:</label>
@@ -293,5 +294,11 @@ onUnmounted(() => {
 h1, h2 {
   text-align: center;
   color: #333;
+}
+
+.version {
+  font-size: 0.6em;
+  color: #666;
+  font-weight: normal;
 }
 </style>
