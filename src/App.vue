@@ -44,16 +44,38 @@ async function listPorts() {
     
     // 각 포트의 전체 정보 저장
     const portDetailsArray = portsArray.flatMap(p => {
+      console.log('Processing port data:', p);
+      
       if (typeof p === 'object' && !Array.isArray(p)) {
         // Handle object with COM ports as keys
-        return Object.entries(p).map(([portName, details]) => ({
-          name: portName,
-          product: details.product || ''
-        }));
+        return Object.entries(p).map(([portName, details]) => {
+          if (!portName) {
+            console.warn('Empty port name found in object');
+            return null;
+          }
+          // Ensure portName is properly formatted
+          const formattedPortName = portName.trim();
+          console.log('Processing object port:', formattedPortName, details);
+          return {
+            name: formattedPortName,
+            product: details.product || ''
+          };
+        }).filter(Boolean); // Remove null entries
       }
+      
       // Fallback for other formats
+      if (!p) {
+        console.warn('Empty port data received');
+        return [];
+      }
+      const portName = String(p).trim();
+      if (!portName) {
+        console.warn('Empty port name after processing');
+        return [];
+      }
+      console.log('Processing simple port:', portName);
       return [{
-        name: String(p),
+        name: portName,
         product: ''
       }];
     });
@@ -61,12 +83,22 @@ async function listPorts() {
     
     // 포트 정보 업데이트
     portDetails.value = portDetailsArray;
+    ports.value = portDetailsArray.map(p => p.name);
     // 포트 목록 디버깅
-    console.log('Port details:', portDetails);
+    console.log('Port details:', portDetails.value);
+    console.log('Available ports:', ports.value);
     
-    if (ports.value.length > 0) {
-      selectedPort.value = ports.value[0];
+    if (portDetailsArray.length > 0) {
+      const firstPort = portDetailsArray[0].name;
+      console.log('First available port:', firstPort);
+      if (firstPort && firstPort.trim() !== '') {
+        selectedPort.value = firstPort;
+        console.log('Set selected port to:', selectedPort.value);
+      } else {
+        console.warn('First port name is empty');
+      }
     } else {
+      console.warn('No ports found in portDetailsArray');
       receivedMessages.value.push('No available ports found');
     }
   } catch (error) {
@@ -90,13 +122,27 @@ async function toggleConnection() {
     isConnected.value = false;
   } else {
     // Connect
-    if (!selectedPort.value) {
-      receivedMessages.value.push("Please select a COM port.");
+    if (!selectedPort.value || selectedPort.value.trim() === '') {
+      receivedMessages.value.push("Please select a valid COM port.");
       return;
     }
     try {
-      serialPortInstance = new SerialPort(selectedPort.value, {
-        baud_rate: 9600, // Default baud rate, can be made configurable
+      console.log('Selected port value:', selectedPort.value);
+      if (!selectedPort.value) {
+        throw new Error('Port value is empty');
+      }
+
+      // Ensure we have a valid port name
+      const portPath = selectedPort.value;
+      console.log('Attempting to connect to port:', portPath);
+
+      if (!portPath || portPath === '') {
+        throw new Error('Port path is empty');
+      }
+
+      serialPortInstance = new SerialPort({
+        path: portPath,
+        baudRate: 9600, // Default baud rate, can be made configurable
       });
       await serialPortInstance.open();
       unlisten = await serialPortInstance.listen((data) => {
