@@ -36,17 +36,31 @@ watch(
 async function listPorts() {
   try {
     const availablePorts = await SerialPort.available_ports();
-    console.log('Available ports:', availablePorts); // 데이터 구조 확인
+    console.log('Raw available ports:', availablePorts); // 원본 데이터 로깅
     
     // 포트 데이터가 배열이 아닌 경우를 처리
     const portsArray = Array.isArray(availablePorts) ? availablePorts : [availablePorts];
+    console.log('Ports array:', portsArray); // 배열 변환 후 데이터 로깅
+    
     // 각 포트의 전체 정보 저장
-    const portDetails = portsArray.map(p => ({
-      name: p.port_name || p.portName || p,
-      product: p.product || ''
-    }));
-    // 포트 이름만 따로 저장
-    ports.value = portDetails.map(p => p.name);
+    const portDetailsArray = portsArray.flatMap(p => {
+      if (typeof p === 'object' && !Array.isArray(p)) {
+        // Handle object with COM ports as keys
+        return Object.entries(p).map(([portName, details]) => ({
+          name: portName,
+          product: details.product || ''
+        }));
+      }
+      // Fallback for other formats
+      return [{
+        name: String(p),
+        product: ''
+      }];
+    });
+    console.log('Processed ports:', portDetailsArray); // 포트 처리 결과 로깅
+    
+    // 포트 정보 업데이트
+    portDetails.value = portDetailsArray;
     // 포트 목록 디버깅
     console.log('Port details:', portDetails);
     
@@ -169,8 +183,9 @@ onUnmounted(() => {
     <div class="row">
       <label for="com-port-select">COM Port:</label>
       <select id="com-port-select" v-model="selectedPort">
+        <option value="">Select a port</option>
         <option v-for="port in portDetails" :key="port.name" :value="port.name">
-          {{ port.product ? `${port.name} (${port.product})` : port.name }}
+          {{ port.name + (port.product ? ` - ${port.product}` : '') }}
         </option>
       </select>
       <button class="icon-button" @click="listPorts" :disabled="isConnected" title="Refresh port list">
