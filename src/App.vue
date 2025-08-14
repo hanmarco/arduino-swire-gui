@@ -167,7 +167,7 @@ async function sendMessage(message) {
   }
   try {
     const encoder = new TextEncoder();
-    await serialPortInstance.write(encoder.encode(message + '\n')); // Add newline for command termination
+    await serialPortInstance.write((message + '\n')); // Add newline for command termination
     receivedMessages.value.push(`Sent: ${message}`);
   } catch (error) {
     console.error("Error sending message:", error);
